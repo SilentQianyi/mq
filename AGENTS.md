@@ -12,7 +12,11 @@ All error returns use `*ce.CodeError` (from `github.com/SilentQianyi/codeerror`)
 
 ## Logging
 
-本库依赖 `github.com/SilentQianyi/logger` 包，内部通过 `logger.Get()` 获取全局 `*zap.Logger` 实例，无需外部传入。禁止使用 `fmt.Println` 或 `log` 包。
+本项目日志统一使用 `github.com/SilentQianyi/logger` 包，不直接依赖 `go.uber.org/zap`。
+- 获取实例：`mq.GetLogger()` 或 `logger.L()` 返回 `*logger.Logger`
+- 日志字段：`logger.String()`、`logger.Int()`、`logger.Error()` 等
+- logger 包必须在 mq 初始化前完成 `logger.Init()`
+- 禁止使用 `fmt.Println` 或 `log` 包
 
 ## Naming Conventions
 

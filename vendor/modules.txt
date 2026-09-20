@@ -1,7 +1,7 @@
 # github.com/SilentQianyi/codeerror v1.0.1
 ## explicit; go 1.16
 github.com/SilentQianyi/codeerror
-# github.com/SilentQianyi/logger v1.0.0 => ../logger
+# github.com/SilentQianyi/logger v1.0.1 => ../logger
 ## explicit; go 1.22.0
 github.com/SilentQianyi/logger
 # github.com/cespare/xxhash/v2 v2.3.0

@@ -5,8 +5,8 @@ import (
 	"sync"
 
 	mq "github.com/SilentQianyi/mq"
+	"github.com/SilentQianyi/logger"
 	natsLib "github.com/nats-io/nats.go"
-	"go.uber.org/zap"
 )
 
 // natsSubscription NATS Core 订阅实现
@@ -14,7 +14,7 @@ type natsSubscription struct {
 	conn         *natsLib.Conn
 	subject      string
 	handler      func(msg mq.Message)
-	logger       *zap.Logger
+	logger       *logger.Logger
 	subscription *natsLib.Subscription
 	running      bool
 	mu           sync.Mutex
@@ -30,7 +30,7 @@ func (s *natsSubscription) start() error {
 
 	s.subscription = sub
 	s.running = true
-	s.logger.Info("NATS subscription started", zap.String("subject", s.subject))
+	s.logger.Info("NATS subscription started", logger.String("subject", s.subject))
 	return nil
 }
 
@@ -57,7 +57,7 @@ type natsQueueSubscription struct {
 	sub        *natsLib.Subscription
 	pool       *mq.WorkerPool
 	streamName string
-	logger     *zap.Logger
+	logger     *logger.Logger
 	running    bool
 	mu         sync.Mutex
 	ctx        chan struct{}
@@ -68,14 +68,14 @@ func (s *natsQueueSubscription) start() {
 	s.running = true
 
 	go s.dispatcher()
-	s.logger.Info("NATS queue subscription started", zap.String("stream", s.streamName))
+	s.logger.Info("NATS queue subscription started", logger.String("stream", s.streamName))
 }
 
 func (s *natsQueueSubscription) dispatcher() {
 	for {
 		select {
 		case <-s.ctx:
-			s.logger.Info("Queue dispatcher stopped", zap.String("stream", s.streamName))
+			s.logger.Info("Queue dispatcher stopped", logger.String("stream", s.streamName))
 			return
 		default:
 			msgs, err := s.sub.Fetch(1, natsLib.MaxWait(100))
@@ -87,7 +87,7 @@ func (s *natsQueueSubscription) dispatcher() {
 				case <-s.ctx:
 					return
 				default:
-					s.logger.Error("Fetch failed", zap.String("stream", s.streamName), zap.Error(err))
+					s.logger.Error("Fetch failed", logger.String("stream", s.streamName), logger.Error(err))
 					continue
 				}
 			}

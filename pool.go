@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"sync"
 
-	"go.uber.org/zap"
+	"github.com/SilentQianyi/logger"
 )
 
 // HandlerFunc 消息处理函数签名
@@ -15,7 +15,7 @@ type WorkerPool struct {
 	workerCount int
 	jobChan     chan Message
 	handler     HandlerFunc
-	logger      *zap.Logger
+	logger      *logger.Logger
 	wg          sync.WaitGroup
 }
 
@@ -38,7 +38,7 @@ func (p *WorkerPool) Start() {
 		p.wg.Add(1)
 		go p.worker(i)
 	}
-	p.logger.Info("worker pool started", zap.Int("workers", p.workerCount))
+	p.logger.Info("worker pool started", logger.Int("workers", p.workerCount))
 }
 
 // Stop 停止所有 Worker
@@ -66,9 +66,9 @@ func (p *WorkerPool) processMsg(workerID int, msg Message) {
 			buf := make([]byte, 1024)
 			n := runtime.Stack(buf, false)
 			p.logger.Error("worker panic recovered",
-				zap.Int("worker", workerID),
-				zap.Any("panic", r),
-				zap.String("stack", string(buf[:n])),
+				logger.Int("worker", workerID),
+				logger.Any("panic", r),
+				logger.String("stack", string(buf[:n])),
 			)
 			_ = msg.Nak()
 		}

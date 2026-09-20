@@ -6,8 +6,8 @@ import (
 	"time"
 
 	mq "github.com/SilentQianyi/mq"
+	"github.com/SilentQianyi/logger"
 	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
 )
 
 // redisPubSubSubscription Redis Pub/Sub 订阅实现
@@ -15,7 +15,7 @@ type redisPubSubSubscription struct {
 	pubsub  *redis.PubSub
 	subject string
 	handler func(msg mq.Message)
-	logger  *zap.Logger
+	logger  *logger.Logger
 	ctx     context.Context
 	running bool
 	mu      sync.Mutex
@@ -24,7 +24,7 @@ type redisPubSubSubscription struct {
 func (s *redisPubSubSubscription) start() {
 	s.running = true
 	go s.listen()
-	s.logger.Info("Redis Pub/Sub subscription started", zap.String("subject", s.subject))
+	s.logger.Info("Redis Pub/Sub subscription started", logger.String("subject", s.subject))
 }
 
 func (s *redisPubSubSubscription) listen() {
@@ -32,7 +32,7 @@ func (s *redisPubSubSubscription) listen() {
 	for {
 		select {
 		case <-s.ctx.Done():
-			s.logger.Info("Pub/Sub listener stopped", zap.String("subject", s.subject))
+			s.logger.Info("Pub/Sub listener stopped", logger.String("subject", s.subject))
 			return
 		case msg, ok := <-ch:
 			if !ok {
@@ -71,7 +71,7 @@ type redisStreamSubscription struct {
 	streamKey string
 	subject   string
 	handler   func(msg mq.Message)
-	logger    *zap.Logger
+	logger    *logger.Logger
 	ctx       context.Context
 	cancel    context.CancelFunc
 	running   bool
@@ -87,14 +87,14 @@ func (s *redisStreamSubscription) start() {
 	s.lastID = "0" // 从头开始消费
 
 	go s.listen()
-	s.logger.Info("Redis Stream subscription started", zap.String("stream", s.streamKey))
+	s.logger.Info("Redis Stream subscription started", logger.String("stream", s.streamKey))
 }
 
 func (s *redisStreamSubscription) listen() {
 	for {
 		select {
 		case <-s.ctx.Done():
-			s.logger.Info("Stream listener stopped", zap.String("stream", s.streamKey))
+			s.logger.Info("Stream listener stopped", logger.String("stream", s.streamKey))
 			return
 		default:
 			streams, err := s.rdb.XRead(s.ctx, &redis.XReadArgs{
@@ -110,7 +110,7 @@ func (s *redisStreamSubscription) listen() {
 				if s.ctx.Err() != nil {
 					return
 				}
-				s.logger.Error("XRead error", zap.Error(err))
+				s.logger.Error("XRead error", logger.Error(err))
 				continue
 			}
 
@@ -154,7 +154,7 @@ type redisQueueSubscription struct {
 	group     string
 	consumer  string
 	pool      *mq.WorkerPool
-	logger    *zap.Logger
+	logger    *logger.Logger
 	ctx       context.Context
 	cancel    context.CancelFunc
 	running   bool
@@ -169,9 +169,9 @@ func (s *redisQueueSubscription) start() {
 
 	go s.listen()
 	s.logger.Info("Redis queue subscription started",
-		zap.String("stream", s.streamKey),
-		zap.String("group", s.group),
-		zap.String("consumer", s.consumer),
+		logger.String("stream", s.streamKey),
+		logger.String("group", s.group),
+		logger.String("consumer", s.consumer),
 	)
 }
 
@@ -180,8 +180,8 @@ func (s *redisQueueSubscription) listen() {
 		select {
 		case <-s.ctx.Done():
 			s.logger.Info("Queue listener stopped",
-				zap.String("stream", s.streamKey),
-				zap.String("group", s.group),
+				logger.String("stream", s.streamKey),
+				logger.String("group", s.group),
 			)
 			return
 		default:
@@ -200,7 +200,7 @@ func (s *redisQueueSubscription) listen() {
 				if s.ctx.Err() != nil {
 					return
 				}
-				s.logger.Error("XReadGroup error", zap.Error(err))
+				s.logger.Error("XReadGroup error", logger.Error(err))
 				continue
 			}
 

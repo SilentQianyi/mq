@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/SilentQianyi/logger"
-	"go.uber.org/zap"
 )
 
 // ClientFactory 客户端工厂函数类型
@@ -12,6 +11,9 @@ type ClientFactory func(cfg *Config) (MQClient, error)
 
 // 全局工厂注册表
 var factories = make(map[Mode]ClientFactory)
+
+// Field 日志字段类型，别名 logger.Field
+type Field = logger.Field
 
 // RegisterFactory 注册客户端工厂函数
 func RegisterFactory(mode Mode, factory ClientFactory) {
@@ -28,6 +30,6 @@ func NewClient(cfg *Config) (MQClient, error) {
 }
 
 // GetLogger 获取全局日志实例
-func GetLogger() *zap.Logger {
-	return logger.Get()
+func GetLogger() *logger.Logger {
+	return logger.L()
 }

@@ -5,9 +5,9 @@ import (
 	"time"
 
 	mq "github.com/SilentQianyi/mq"
+	"github.com/SilentQianyi/logger"
 	ce "github.com/SilentQianyi/codeerror"
 	natsLib "github.com/nats-io/nats.go"
-	"go.uber.org/zap"
 )
 
 func init() {
@@ -22,7 +22,7 @@ func init() {
 // natsClient NATS 客户端实现
 type natsClient struct {
 	conn   *natsLib.Conn
-	logger *zap.Logger
+	logger *logger.Logger
 }
 
 // NewNATSClient 创建 NATS 客户端
@@ -33,7 +33,7 @@ func NewNATSClient(cfg *mq.NATSConfig) (mq.MQClient, error) {
 	}
 
 	log := mq.GetLogger()
-	log.Info("NATS connected", zap.String("url", cfg.URL))
+	log.Info("NATS connected", logger.String("url", cfg.URL))
 
 	return &natsClient{
 		conn:   nc,
@@ -129,7 +129,7 @@ func (c *natsClient) EnsureQueue(cfg *mq.QueueConfig) *ce.CodeError {
 	if err != nil && !isAlreadyExists(err) {
 		return mq.MQStreamError.Msg("add stream: " + err.Error())
 	}
-	c.logger.Info("JetStream stream ensured", zap.String("stream", cfg.StreamName))
+	c.logger.Info("JetStream stream ensured", logger.String("stream", cfg.StreamName))
 
 	consumerCfg := &natsLib.ConsumerConfig{
 		Durable:       cfg.ConsumerName,
@@ -148,7 +148,7 @@ func (c *natsClient) EnsureQueue(cfg *mq.QueueConfig) *ce.CodeError {
 	if err != nil && !isAlreadyExists(err) {
 		return mq.MQConsumerError.Msg("add consumer: " + err.Error())
 	}
-	c.logger.Info("JetStream consumer ensured", zap.String("consumer", cfg.ConsumerName))
+	c.logger.Info("JetStream consumer ensured", logger.String("consumer", cfg.ConsumerName))
 
 	return nil
 }

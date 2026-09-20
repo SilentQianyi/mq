@@ -6,7 +6,9 @@
       "Bash(ls D:/self/go/web/)",
       "Read(//d/self/go/web/**)",
       "Bash(cd D:/self/go/web/mq && go mod tidy 2>&1)",
-      "Bash(cd D:/self/go/web/mq && go build ./... 2>&1)"
+      "Bash(cd D:/self/go/web/mq && go build ./... 2>&1)",
+      "Bash(cd D:/self/go/web/mq && go mod vendor 2>&1)",
+      "Bash(cd D:/self/go/web/mq && GOFLAGS=-mod=mod go mod tidy 2>&1 && go mod vendor 2>&1)"
     ]
   }
 }

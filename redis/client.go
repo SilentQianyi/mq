@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	mq "github.com/SilentQianyi/mq"
+	"github.com/SilentQianyi/logger"
 	ce "github.com/SilentQianyi/codeerror"
 	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
 )
 
 func init() {
@@ -23,7 +23,7 @@ func init() {
 type redisClient struct {
 	rdb    *redis.Client
 	mqMode mq.RedisMQMode
-	logger *zap.Logger
+	logger *logger.Logger
 	ctx    context.Context
 }
 
@@ -43,9 +43,9 @@ func NewRedisClient(cfg *mq.RedisConfig) (mq.MQClient, error) {
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	log := mq.GetLogger()
 	log.Info("Redis connected",
-		zap.String("addr", addr),
-		zap.Int("db", cfg.DB),
-		zap.String("mqMode", string(cfg.MQMode)),
+		logger.String("addr", addr),
+		logger.Int("db", cfg.DB),
+		logger.String("mqMode", string(cfg.MQMode)),
 	)
 
 	return &redisClient{
@@ -218,8 +218,8 @@ func (c *redisClient) EnsureQueue(cfg *mq.QueueConfig) *ce.CodeError {
 		return mq.MQStreamError.Msg("xgroup create: " + err.Error())
 	}
 	c.logger.Info("Redis stream group ensured",
-		zap.String("stream", streamKey),
-		zap.String("group", group),
+		logger.String("stream", streamKey),
+		logger.String("group", group),
 	)
 
 	return nil
