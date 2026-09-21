@@ -3,7 +3,7 @@ package mq
 import (
 	"fmt"
 
-	"github.com/SilentQianyi/logger"
+	"github.com/go-meridian/logger"
 )
 
 // ClientFactory 客户端工厂函数类型

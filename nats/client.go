@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	mq "github.com/SilentQianyi/mq"
-	"github.com/SilentQianyi/logger"
-	ce "github.com/SilentQianyi/codeerror"
+	ce "github.com/go-meridian/codeerror"
+	"github.com/go-meridian/logger"
+	"github.com/go-meridian/mq"
 	natsLib "github.com/nats-io/nats.go"
 )
 

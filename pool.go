@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/SilentQianyi/logger"
+	"github.com/go-meridian/logger"
 )
 
 // HandlerFunc 消息处理函数签名

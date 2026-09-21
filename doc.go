@@ -4,8 +4,8 @@
 //
 //	// 导入实现包以注册工厂（重要！）
 //	import (
-//	    _ "github.com/SilentQianyi/mq/nats"
-//	    _ "github.com/SilentQianyi/mq/redis"
+//	    _ "github.com/go-meridian/mq/nats"
+//	    _ "github.com/go-meridian/mq/redis"
 //	)
 //
 //	// 创建客户端

@@ -1,6 +1,6 @@
 package mq
 
-import ce "github.com/SilentQianyi/codeerror"
+import ce "github.com/go-meridian/codeerror"
 
 // MQClient 统一 MQ 客户端接口
 type MQClient interface {

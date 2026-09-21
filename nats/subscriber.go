@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	mq "github.com/SilentQianyi/mq"
-	"github.com/SilentQianyi/logger"
+	"github.com/go-meridian/logger"
+	"github.com/go-meridian/mq"
 	natsLib "github.com/nats-io/nats.go"
 )
 

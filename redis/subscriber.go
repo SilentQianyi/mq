@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	mq "github.com/SilentQianyi/mq"
-	"github.com/SilentQianyi/logger"
+	"github.com/go-meridian/logger"
+	"github.com/go-meridian/mq"
 	"github.com/redis/go-redis/v9"
 )
 

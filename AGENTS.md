@@ -4,15 +4,15 @@ This file provides guidance to the AI agent when working with code in this repos
 
 ## Project
 
-Go library (`github.com/SilentQianyi/mq`) providing a unified MQ client interface with NATS and Redis backends. Uses factory pattern: sub-packages register via `init()` + `RegisterFactory()`.
+Go library (`github.com/go-meridian/mq`) providing a unified MQ client interface with NATS and Redis backends. Uses factory pattern: sub-packages register via `init()` + `RegisterFactory()`.
 
 ## Error Types
 
-All error returns use `*ce.CodeError` (from `github.com/SilentQianyi/codeerror`), NOT Go standard `error`. Package-level error codes are defined in `error.go`. When returning errors, use `.Msg()` to wrap details.
+All error returns use `*ce.CodeError` (from `github.com/go-meridian/codeerror`), NOT Go standard `error`. Package-level error codes are defined in `error.go`. When returning errors, use `.Msg()` to wrap details.
 
 ## Logging
 
-本项目日志统一使用 `github.com/SilentQianyi/logger` 包，不直接依赖 `go.uber.org/zap`。
+本项目日志统一使用 `github.com/go-meridian/logger` 包，不直接依赖 `go.uber.org/zap`。
 - 获取实例：`mq.GetLogger()` 或 `logger.L()` 返回 `*logger.Logger`
 - 日志字段：`logger.String()`、`logger.Int()`、`logger.Error()` 等
 - logger 包必须在 mq 初始化前完成 `logger.Init()`
@@ -20,20 +20,20 @@ All error returns use `*ce.CodeError` (from `github.com/SilentQianyi/codeerror`)
 
 ## Naming Conventions
 
-- Sub-packages (`nats/`, `redis/`) import parent as `mq "github.com/SilentQianyi/mq"` (named import)
+- Sub-packages (`nats/`, `redis/`) import parent as `"github.com/go-meridian/mq"` (named import)
 - Third-party libs use short aliases: `natsLib`, `ce`
 
 ## Lobby 项目使用方式（下游消费者）
 
-Lobby 通过 `replace` 指令引用本库（`replace github.com/SilentQianyi/mq => ../mq`），以下为标准集成模式。
+Lobby 通过 `replace` 指令引用本库（`replace github.com/go-meridian/mq => ../mq`），以下为标准集成模式。
 
 ### 1. Import（main.go）
 
 ```go
 import (
-    mq "github.com/SilentQianyi/mq"
-    _ "github.com/SilentQianyi/mq/nats"   // side-effect，注册 NATS 工厂
-    _ "github.com/SilentQianyi/mq/redis"  // side-effect，注册 Redis 工厂
+    "github.com/go-meridian/mq"
+    _ "github.com/go-meridian/mq/nats"   // side-effect，注册 NATS 工厂
+    _ "github.com/go-meridian/mq/redis"  // side-effect，注册 Redis 工厂
 )
 ```
 

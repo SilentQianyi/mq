@@ -1,6 +1,6 @@
 package mq
 
-import ce "github.com/SilentQianyi/codeerror"
+import ce "github.com/go-meridian/codeerror"
 
 var (
 	MQConnectError   = ce.New(1020, "mq connect error")
